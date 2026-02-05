@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inmobiliaria</title>
+
+<style>
+:root{
+  --black:#000;
+  --gold:#c9a24d;
+  --white:#fff;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background:#000;
+  color:var(--white);
+  line-height:1.6;
+}
+
+a{text-decoration:none;color:inherit;}
+
+header{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:40px 20px;
+}
+
+header img{width:180px;margin-bottom:30px;}
+header h1{color:var(--gold);margin-bottom:15px;}
+
+section{
+  padding:80px 10%;
+  border-top:2px solid var(--gold);
+}
+
+h2{
+  color:var(--gold);
+  text-align:center;
+  margin-bottom:30px;
+}
+
+/* Cards */
+.values{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:30px;
+}
+
+.card{
+  border:1px solid var(--gold);
+  padding:30px;
+  border-radius:15px;
+}
+
+/* ====== CARRUSEL ====== */
+.carousel{
+  position:relative;
+  overflow:hidden;
+  border:2px solid var(--gold);
+  border-radius:20px;
+}
+
+.carousel-track{
+  display:flex;
+  transition:transform .6s ease;
+}
+
+.carousel-item{
+  min-width:100%;
+}
+
+.carousel img,
+.carousel video{
+  width:100%;
+  height:500px;
+  object-fit:cover;
+}
+
+/* Indicadores */
+.indicators{
+  position:absolute;
+  bottom:15px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:8px;
+}
+
+.indicators span{
+  width:10px;
+  height:10px;
+  background:#777;
+  border-radius:50%;
+  cursor:pointer;
+}
+
+.indicators .active{background:var(--gold);}
+
+/* Footer */
+footer{
+  border-top:2px solid var(--gold);
+  padding:40px 10%;
+  text-align:center;
+}
+
+footer a{color:var(--gold);display:block;margin-top:10px;}
+
+/* WhatsApp */
+.whatsapp{
+  position:fixed;
+  bottom:25px;
+  right:25px;
+  background:#25D366;
+  color:#fff;
+  padding:14px 18px;
+  border-radius:50px;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <img src="logo.jpg" alt="Logo Inmobiliaria">
+  <h1>Inversiones inmobiliarias con respaldo y confianza</h1>
+  <p>Somos una inmobiliaria comprometida con brindar un servicio de calidad, basado en la confianza, la legalidad y la atención personalizada.</p>
+</header>
+
+<section class="about">
+  <h2>Quiénes somos</h2>
+  <p>Ofrecemos soluciones inmobiliarias confiables, con acompañamiento profesional y respaldo legal en cada operación.</p>
+</section>
+
+<section>
+  <h2>Misión, Visión y Valores</h2>
+  <div class="values">
+    <div class="card"><h3>Misión</h3><p>Brindar servicios inmobiliarios seguros y de calidad.</p></div>
+    <div class="card"><h3>Visión</h3><p>Ser una inmobiliaria referente por ética y profesionalismo.</p></div>
+    <div class="card"><h3>Valores</h3><p>Confianza, legalidad, transparencia y compromiso.</p></div>
+  </div>
+</section>
+
+<section id="galeria">
+<h2>Galería</h2>
+
+<div class="carousel">
+  <div class="carousel-track" id="track">
+
+    <!-- 46 IMÁGENES -->
+    <!-- img1.jpeg a img46.jpeg -->
+    <!-- Ejemplo -->
+    <div class="carousel-item"><img src="img1.jpeg"></div>
+    <!-- ... -->
+    <div class="carousel-item"><img src="img46.jpeg"></div>
+
+    <!-- VIDEOS -->
+    <div class="carousel-item">
+      <video src="video1.mp4" autoplay muted loop playsinline></video>
+    </div>
+    <div class="carousel-item">
+      <video src="video2.mp4" autoplay muted loop playsinline></video>
+    </div>
+    <div class="carousel-item">
+
+  </div>
+
+  <div class="indicators" id="indicators"></div>
+</div>
+</section>
+
+<footer>
+  <p>Contacto</p>
+  <a href="mailto:juanponce440@gmail.com">juanponce440@gmail.com</a>
+  <a href="tel:5630687533">Tel: 56 3068 7533</a>
+</footer>
+
+<a class="whatsapp" href="https://wa.me/5215630687533" target="_blank">WhatsApp</a>
+
+<script>
+const track=document.getElementById('track');
+const items=document.querySelectorAll('.carousel-item');
+const indicators=document.getElementById('indicators');
+let index=0,startX=0;
+
+items.forEach((_,i)=>{
+  const dot=document.createElement('span');
+  if(i===0)dot.classList.add('active');
+  dot.onclick=()=>moveTo(i);
+  indicators.appendChild(dot);
+});
+
+function moveTo(i){
+  index=i;
+  track.style.transform=`translateX(-${index*100}%)`;
+  document.querySelectorAll('.indicators span').forEach(d=>d.classList.remove('active'));
+  indicators.children[index].classList.add('active');
+}
+
+setInterval(()=>{
+  index=(index+1)%items.length;
+  moveTo(index);
+},5000);
+
+/* Swipe táctil */
+track.addEventListener('touchstart',e=>startX=e.touches[0].clientX);
+track.addEventListener('touchend',e=>{
+  let diff=startX-e.changedTouches[0].clientX;
+  if(diff>50) index=(index+1)%items.length;
+  if(diff<-50) index=(index-1+items.length)%items.length;
+  moveTo(index);
+});
+</script>
+
+</body>
+</html>
